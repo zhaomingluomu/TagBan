@@ -1,0 +1,11 @@
+{
+  "title.tagban.config": "TagBan Configuration",
+  "category.tagban.general": "General Settings",
+  "config.tagban.tools": "Blacklist",
+  "config.tagban.whitelist": "Whitelist",
+  "config.tagban.tooltip": "Disabled Tooltip",
+  "tooltip.tagban.tools": "List of banned regular expressions\nDoes not affect armor, totems, etc.\nOnly applies to player's held items (attacking, placing, and active use)\nFormat: modID:name_pattern\nExamples:\n- minecraft:.*_axe (all vanilla axes)\n- .*:wooden_.* (all tools with wooden tags)",
+  "tooltip.tagban.whitelist": "List of allowed regular expressions (overrides blacklist)\nHigher priority than blacklist\nExamples:\n- minecraft:.*_axe (all vanilla axes)\n- .*:wooden_.* (all tools with wooden tags)\n- minecraft:iron_sword (iron sword)",
+  "tooltip.tagban.tooltip": "Tooltip text displayed for disabled items\nSupports translation text",
+  "tooltip.tagban": "§cThis item is disabled by TagBan mod. Can only be used for crafting."
+}
