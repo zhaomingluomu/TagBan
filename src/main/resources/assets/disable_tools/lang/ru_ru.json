@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "Конфигурация TagBan",
+  "category.tagban.general": "Управление правилами",
+  "config.tagban.enable_screen": "Включить экран конфигурации в игре",
+  "config.tagban.enable_screen.tooltip": "§cПредупреждение: После отключения вы можете включить его снова только отредактировав файл конфигурации!",
+  
+  "config.tagban.global_black": "Глобальный черный список (Отключить все)",
+  "config.tagban.global_white": "Глобальный белый список (Разрешить все)",
+  "config.tagban.tt_global": "Ключ сообщения о глобальной блокировке",
+  
+  "config.tagban.divider.break": "§6--- Настройки добычи ---",
+  "config.tagban.break_b": "Отключить добычу",
+  "config.tagban.break_w": "Разрешить добычу (Белый список)",
+  "config.tagban.tt_break": "Ключ сообщения о блокировке добычи",
+  
+  "config.tagban.divider.attack": "§c--- Настройки атаки ---",
+  "config.tagban.attack_b": "Отключить атаку",
+  "config.tagban.attack_w": "Разрешить атаку (Белый список)",
+  "config.tagban.tt_attack": "Ключ сообщения о блокировке атаки",
+  
+  "config.tagban.divider.interact": "§e--- Настройки взаимодействия ---",
+  "config.tagban.interact_b": "Отключить взаимодействие",
+  "config.tagban.interact_w": "Разрешить взаимодействие (Белый список)",
+  "config.tagban.tt_interact": "Ключ сообщения о блокировке взаимодействия",
+  
+  "config.tagban.divider.use": "§b--- Настройки использования ---",
+  "config.tagban.use_b": "Отключить правый клик/использование",
+  "config.tagban.use_w": "Разрешить правый клик/использование (Белый список)",
+  "config.tagban.tt_use": "Ключ сообщения о блокировке использования",
+  
+  "config.tagban.divider.armor": "§9--- Настройки брони ---",
+  "config.tagban.armor_b": "Отключить ношение брони",
+  "config.tagban.armor_w": "Разрешить ношение брони (Белый список)",
+  "config.tagban.tt_armor": "Ключ сообщения о блокировке брони",
+  
+  "tooltip.tagban.global": "Этот предмет был глобально отключен",
+  "tooltip.tagban.break": "Вы не можете использовать этот предмет для добычи блоков",
+  "tooltip.tagban.attack": "Вы не можете использовать этот предмет для атаки",
+  "tooltip.tagban.interact": "Вы не можете использовать этот предмет для взаимодействия",
+  "tooltip.tagban.use": "Вы не можете использовать этот предмет",
+  "tooltip.tagban.armor": "Вы не можете надеть эту броню"
+}

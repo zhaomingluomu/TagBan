@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "Configuración de TagBan",
+  "category.tagban.general": "Gestión de reglas",
+  "config.tagban.enable_screen": "Activar pantalla de configuración en el juego",
+  "config.tagban.enable_screen.tooltip": "§cAdvertencia: ¡Una vez desactivado, solo puede volver a activarlo editando el archivo de configuración!",
+  
+  "config.tagban.global_black": "Lista negra global (Desactivar todo)",
+  "config.tagban.global_white": "Lista blanca global (Permitir todo)",
+  "config.tagban.tt_global": "Clave del mensaje de bloqueo global",
+  
+  "config.tagban.divider.break": "§6--- Configuración de minería ---",
+  "config.tagban.break_b": "Desactivar minería",
+  "config.tagban.break_w": "Permitir minería (Lista blanca)",
+  "config.tagban.tt_break": "Clave del mensaje de bloqueo de minería",
+  
+  "config.tagban.divider.attack": "§c--- Configuración de ataque ---",
+  "config.tagban.attack_b": "Desactivar ataque",
+  "config.tagban.attack_w": "Permitir ataque (Lista blanca)",
+  "config.tagban.tt_attack": "Clave del mensaje de bloqueo de ataque",
+  
+  "config.tagban.divider.interact": "§e--- Configuración de interacción ---",
+  "config.tagban.interact_b": "Desactivar interacción",
+  "config.tagban.interact_w": "Permitir interacción (Lista blanca)",
+  "config.tagban.tt_interact": "Clave del mensaje de bloqueo de interacción",
+  
+  "config.tagban.divider.use": "§b--- Configuración de uso ---",
+  "config.tagban.use_b": "Desactivar clic derecho/uso",
+  "config.tagban.use_w": "Permitir clic derecho/uso (Lista blanca)",
+  "config.tagban.tt_use": "Clave del mensaje de bloqueo de uso",
+  
+  "config.tagban.divider.armor": "§9--- Configuración de armadura ---",
+  "config.tagban.armor_b": "Desactivar uso de armadura",
+  "config.tagban.armor_w": "Permitir uso de armadura (Lista blanca)",
+  "config.tagban.tt_armor": "Clave del mensaje de bloqueo de armadura",
+  
+  "tooltip.tagban.global": "Este objeto ha sido desactivado globalmente",
+  "tooltip.tagban.break": "No puedes usar este objeto para minar bloques",
+  "tooltip.tagban.attack": "No puedes usar este objeto para atacar",
+  "tooltip.tagban.interact": "No puedes usar este objeto para interactuar",
+  "tooltip.tagban.use": "No puedes usar este objeto",
+  "tooltip.tagban.armor": "No puedes llevar esta armadura"
+}

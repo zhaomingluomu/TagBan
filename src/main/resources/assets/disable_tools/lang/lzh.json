@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "禁器配置",
+  "category.tagban.general": "规制",
+  "config.tagban.enable_screen": "启游内配置之屏",
+  "config.tagban.enable_screen.tooltip": "§c警：一旦禁用，唯改配置文件方可重启！",
+  
+  "config.tagban.global_black": "全局黑籍（尽禁）",
+  "config.tagban.global_white": "全局白籍（尽允）",
+  "config.tagban.tt_global": "全局拦截提示",
+  
+  "config.tagban.divider.break": "§6--- 掘取 ---",
+  "config.tagban.break_b": "禁掘",
+  "config.tagban.break_w": "允掘（白籍）",
+  "config.tagban.tt_break": "掘取拦截提示",
+  
+  "config.tagban.divider.attack": "§c--- 攻伐 ---",
+  "config.tagban.attack_b": "禁攻",
+  "config.tagban.attack_w": "允攻（白籍）",
+  "config.tagban.tt_attack": "攻伐拦截提示",
+  
+  "config.tagban.divider.interact": "§e--- 交互 ---",
+  "config.tagban.interact_b": "禁交互",
+  "config.tagban.interact_w": "允交互（白籍）",
+  "config.tagban.tt_interact": "交互拦截提示",
+  
+  "config.tagban.divider.use": "§b--- 使用 ---",
+  "config.tagban.use_b": "禁右击/使用",
+  "config.tagban.use_w": "允右击/使用（白籍）",
+  "config.tagban.tt_use": "使用拦截提示",
+  
+  "config.tagban.divider.armor": "§9--- 甲胄 ---",
+  "config.tagban.armor_b": "禁着甲",
+  "config.tagban.armor_w": "允着甲（白籍）",
+  "config.tagban.tt_armor": "甲胄拦截提示",
+  
+  "tooltip.tagban.global": "此物已禁",
+  "tooltip.tagban.break": "不可掘",
+  "tooltip.tagban.attack": "不可攻",
+  "tooltip.tagban.interact": "不可交互",
+  "tooltip.tagban.use": "不可用",
+  "tooltip.tagban.armor": "不可着"
+}

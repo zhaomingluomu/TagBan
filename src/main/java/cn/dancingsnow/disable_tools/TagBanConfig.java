@@ -1,100 +1,109 @@
+// TagBanConfig.java
 package cn.dancingsnow.disable_tools;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Configuration class for TagBan mod.
+ * 配置文件类，管理 TagBan 模组的各种黑白名单及提示文本。
+ */
 public class TagBanConfig {
-    // 配置规范和实例的单例模式
-    // Configuration specification and singleton instance
     public static final ForgeConfigSpec SPEC;
     public static final TagBanConfig INSTANCE;
 
+    public static final List<String> DEFAULT_GLOBAL_BLACK = Arrays.asList(
+            "minecraft:.*_axe", "minecraft:.*_hoe", "minecraft:.*_pickaxe",
+            "minecraft:.*_shovel", "minecraft:.*_sword"
+    );
+    public static final List<String> DEFAULT_EMPTY_LIST = Collections.emptyList();
+    public static final boolean DEFAULT_ENABLE_SCREEN = true;
+
+    public static final String DEF_G_TT = "tooltip.tagban.global";
+    public static final String DEF_BREAK_TT = "tooltip.tagban.break";
+    public static final String DEF_ATTACK_TT = "tooltip.tagban.attack";
+    public static final String DEF_INTERACT_TT = "tooltip.tagban.interact";
+    public static final String DEF_USE_TT = "tooltip.tagban.use";
+    public static final String DEF_ARMOR_TT = "tooltip.tagban.armor";
+
     static {
-        // 构建配置规范并创建实例
-        // Build configuration specification and create instance
-        final Pair<TagBanConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(TagBanConfig::new);
+        final Pair<TagBanConfig, ForgeConfigSpec> specPair =
+                new ForgeConfigSpec.Builder().configure(TagBanConfig::new);
         SPEC = specPair.getRight();
         INSTANCE = specPair.getLeft();
     }
 
-    // 配置值：工具黑名单、白名单和提示文本
-    // Configuration values: tool blacklist, whitelist and tooltip text
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> tools;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> whitelist;
-    public final ForgeConfigSpec.ConfigValue<String> tooltip;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> globalBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> globalWhitelist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> breakBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> attackBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> interactBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> useBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> armorBlacklist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> breakWhitelist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> attackWhitelist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> interactWhitelist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> useWhitelist;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> armorWhitelist;
+
+    public final ForgeConfigSpec.ConfigValue<String> globalTooltip;
+    public final ForgeConfigSpec.ConfigValue<String> breakTooltip;
+    public final ForgeConfigSpec.ConfigValue<String> attackTooltip;
+    public final ForgeConfigSpec.ConfigValue<String> interactTooltip;
+    public final ForgeConfigSpec.ConfigValue<String> useTooltip;
+    public final ForgeConfigSpec.ConfigValue<String> armorTooltip;
+    public final ForgeConfigSpec.BooleanValue enableConfigScreen;
 
     public TagBanConfig(ForgeConfigSpec.Builder builder) {
-        // 开始构建配置的通用部分
-        // Start building the general section of configuration
-        builder.comment("禁用工具配置").push("general");
+        builder.comment("TagBan Comprehensive Interception Config / TagBan 综合拦截配置")
+                .push("general");
 
-        tools = builder
-                .comment(
-                        // 黑名单配置的详细说明
-                        // Detailed description of blacklist configuration
-                        "黑名单：使用正则表达式禁用工具",
-                        "Blacklist: Use regular expressions to disable tools",
-                        "===禁用对盔甲无效===",
-                        "===Does not affect armor===",
-                        // 各种示例说明
-                        // Various examples
-                        "=== 示例 ===",
-                        "=== Examples ===",
-                        "=== 禁用全部同类型工具 ===",
-                        "=== Disable all tools of the same type ===",
-                        "  - '.*:.*_axe'         禁用所有斧头（所有模组）",
-                        "  - '.*:.*_axe'         Disable all axes (all mods)",
-                        "  - '.*:.*_pickaxe'     禁用所有镐",
-                        "  - '.*:.*_pickaxe'     Disable all pickaxes",
-                        // ... 更多示例
-                        // ... more examples
-                        "禁用对盔甲 复活图腾等无效 仅针对玩家手持物品(攻击，放置及主动使用的生效)",
-                        "Does not affect armor, totems of undying, only affects player held items (attacking, placing and active use)",
-                        "注意：支持所有原版和模组工具，只需替换对应的命名空间和路径",
-                        "Note: Supports all vanilla and modded tools, just replace the corresponding namespace and path",
-                        "默认: 禁用所有原版工具",
-                        "Default: Disable all vanilla tools"
-                )
-                // 定义黑名单列表，默认禁用所有原版工具
-                // Define blacklist, default disable all vanilla tools
-                .defineList("tools",
-                        Arrays.asList(
-                                "minecraft:.*_axe",
-                                "minecraft:.*_hoe",
-                                "minecraft:.*_pickaxe",
-                                "minecraft:.*_shovel",
-                                "minecraft:.*_sword"
-                        ),
-                        obj -> obj instanceof String);
+        globalBlacklist = builder
+                .comment("Global blacklist patterns (regex). Items matching any pattern are banned from ALL actions.")
+                .defineList("globalBlacklist", DEFAULT_GLOBAL_BLACK, TagBanConfig::validateString);
+        globalWhitelist = builder
+                .comment("Global whitelist patterns (regex). Items matching are EXEMPT from global blacklist.")
+                .defineList("globalWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
 
-        whitelist = builder
-                .comment(
-                        // 白名单配置的详细说明
-                        // Detailed description of whitelist configuration
-                        "白名单：使用正则表达式允许工具（优先级高于黑名单）",
-                        "Whitelist: Use regular expressions to allow tools (higher priority than blacklist)",
-                        "写法跟黑名单一模一样",
-                        "Same format as blacklist",
-                        "=== 示例 ===",
-                        "=== Examples ===",
-                        "=== 启用指定工具 ===",
-                        "=== Enable specific tools ===",
-                        "  - 'minecraft:iron_sword'    启用铁剑",
-                        "  - 'minecraft:iron_sword'    Enable iron sword"
-                )
-                // 定义白名单列表，默认为空
-                // Define whitelist, default empty
-                .defineList("whitelist",
-                        Arrays.asList(),
-                        obj -> obj instanceof String);
-
-        tooltip = builder
-                .comment("显示在禁用工具提示框中的文本", "支持翻译文本",
-                        "Text displayed in disabled tool tooltip", "Supports translation text")
-                .define("tooltip", "tooltip.tagban");
-
+        builder.comment("Per-action blacklists").push("blacklists");
+        breakBlacklist = builder.defineList("breakBlacklist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        attackBlacklist = builder.defineList("attackBlacklist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        interactBlacklist = builder.defineList("interactBlacklist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        useBlacklist = builder.defineList("useBlacklist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        armorBlacklist = builder.defineList("armorBlacklist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
         builder.pop();
+
+        builder.comment("Per-action whitelists (override blacklists)").push("whitelists");
+        breakWhitelist = builder.defineList("breakWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        attackWhitelist = builder.defineList("attackWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        interactWhitelist = builder.defineList("interactWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        useWhitelist = builder.defineList("useWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        armorWhitelist = builder.defineList("armorWhitelist", DEFAULT_EMPTY_LIST, TagBanConfig::validateString);
+        builder.pop();
+
+        builder.comment("Tooltip translation keys").push("tooltips");
+        globalTooltip = builder.define("globalTooltip", DEF_G_TT);
+        breakTooltip = builder.define("breakTooltip", DEF_BREAK_TT);
+        attackTooltip = builder.define("attackTooltip", DEF_ATTACK_TT);
+        interactTooltip = builder.define("interactTooltip", DEF_INTERACT_TT);
+        useTooltip = builder.define("useTooltip", DEF_USE_TT);
+        armorTooltip = builder.define("armorTooltip", DEF_ARMOR_TT);
+        builder.pop();
+
+        enableConfigScreen = builder
+                .comment("Enable Cloth Config screen (requires Cloth Config mod installed)")
+                .define("enableConfigScreen", DEFAULT_ENABLE_SCREEN);
+        builder.pop();
+    }
+
+    /**
+     * Validator for config list entries - must be non-null String.
+     * 配置列表条目验证器 - 必须是非空字符串。
+     */
+    private static boolean validateString(Object obj) {
+        return obj instanceof String;
     }
 }

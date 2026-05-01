@@ -1,11 +1,42 @@
 {
-  "title.tagban.config": "TagBan 配置界面",
-  "category.tagban.general": "通用设置",
-  "config.tagban.tools": "黑名单",
-  "config.tagban.whitelist": "白名单",
-  "config.tagban.tooltip": "禁用提示",
-  "tooltip.tagban.tools": "禁用的正则表达式列表\n禁用对盔甲 复活图腾等无效\n仅针对玩家手持物品(攻击，放置及主动使用)的实现\n格式: 模组ID:名称模式\n示例:\n- minecraft:.*_axe (原版所有斧头)\n- .*:wooden_.* (所有带有木制标签的工具)",
-  "tooltip.tagban.whitelist": "允许的正则表达式列表（覆盖黑名单）\n优先级高于黑名单\n示例:\n- minecraft:.*_axe (原版所有斧头)\n- .*:wooden_.* (所有带有木制标签的工具)\n- minecraft:iron_sword (铁剑)",
-  "tooltip.tagban.tooltip": "显示在禁用的提示文本\n支持翻译文本",
-  "tooltip.tagban": "§c此已被 TagBan 模组禁用使用 仅用于合成"
+  "title.tagban.config": "TagBan 配置",
+  "category.tagban.general": "规则管理",
+  "config.tagban.enable_screen": "启用游戏内配置界面",
+  "config.tagban.enable_screen.tooltip": "§c警告：关闭后只能通过修改配置文件重新开启！",
+
+  "config.tagban.global_black": "全局黑名单 (禁用全部)",
+  "config.tagban.global_white": "全局白名单 (允许全部)",
+  "config.tagban.tt_global": "全局拦截提示语 Key",
+
+  "config.tagban.divider.break": "§6--- 挖掘设置 ---",
+  "config.tagban.break_b": "禁止挖掘",
+  "config.tagban.break_w": "允许挖掘 (白名单)",
+  "config.tagban.tt_break": "挖掘拦截提示语 Key",
+
+  "config.tagban.divider.attack": "§c--- 攻击设置 ---",
+  "config.tagban.attack_b": "禁止攻击",
+  "config.tagban.attack_w": "允许攻击 (白名单)",
+  "config.tagban.tt_attack": "攻击拦截提示语 Key",
+
+  "config.tagban.divider.interact": "§e--- 交互设置 ---",
+  "config.tagban.interact_b": "禁止交互",
+  "config.tagban.interact_w": "允许交互 (白名单)",
+  "config.tagban.tt_interact": "交互拦截提示语 Key",
+
+  "config.tagban.divider.use": "§b--- 使用设置 ---",
+  "config.tagban.use_b": "禁止右键/使用",
+  "config.tagban.use_w": "允许右键/使用 (白名单)",
+  "config.tagban.tt_use": "使用拦截提示语 Key",
+
+  "config.tagban.divider.armor": "§9--- 盔甲设置 ---",
+  "config.tagban.armor_b": "禁止穿戴盔甲",
+  "config.tagban.armor_w": "允许穿戴盔甲 (白名单)",
+  "config.tagban.tt_armor": "盔甲拦截提示语 Key",
+
+  "tooltip.tagban.global": "该物品已被全局禁用",
+  "tooltip.tagban.break": "你不能使用此物品挖掘方块",
+  "tooltip.tagban.attack": "你不能使用此物品进行攻击",
+  "tooltip.tagban.interact": "你不能使用此物品进行交互",
+  "tooltip.tagban.use": "你不能使用此物品",
+  "tooltip.tagban.armor": "你不能穿戴这件盔甲"
 }

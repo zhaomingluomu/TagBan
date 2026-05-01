@@ -1,11 +1,42 @@
 {
   "title.tagban.config": "TagBan Configuration",
-  "category.tagban.general": "General Settings",
-  "config.tagban.tools": "Blacklist",
-  "config.tagban.whitelist": "Whitelist",
-  "config.tagban.tooltip": "Disabled Tooltip",
-  "tooltip.tagban.tools": "List of banned regular expressions\nDoes not affect armor, totems, etc.\nOnly applies to player's held items (attacking, placing, and active use)\nFormat: modID:name_pattern\nExamples:\n- minecraft:.*_axe (all vanilla axes)\n- .*:wooden_.* (all tools with wooden tags)",
-  "tooltip.tagban.whitelist": "List of allowed regular expressions (overrides blacklist)\nHigher priority than blacklist\nExamples:\n- minecraft:.*_axe (all vanilla axes)\n- .*:wooden_.* (all tools with wooden tags)\n- minecraft:iron_sword (iron sword)",
-  "tooltip.tagban.tooltip": "Tooltip text displayed for disabled items\nSupports translation text",
-  "tooltip.tagban": "§cThis item is disabled by TagBan mod. Can only be used for crafting."
+  "category.tagban.general": "Rule Management",
+  "config.tagban.enable_screen": "Enable In-Game Config Screen",
+  "config.tagban.enable_screen.tooltip": "§cWarning: Once disabled, you can only re-enable it by editing the config file!",
+  
+  "config.tagban.global_black": "Global Blacklist (Disable All)",
+  "config.tagban.global_white": "Global Whitelist (Allow All)",
+  "config.tagban.tt_global": "Global Block Message Key",
+  
+  "config.tagban.divider.break": "§6--- Mining Settings ---",
+  "config.tagban.break_b": "Disable Mining",
+  "config.tagban.break_w": "Allow Mining (Whitelist)",
+  "config.tagban.tt_break": "Mining Block Message Key",
+  
+  "config.tagban.divider.attack": "§c--- Attack Settings ---",
+  "config.tagban.attack_b": "Disable Attack",
+  "config.tagban.attack_w": "Allow Attack (Whitelist)",
+  "config.tagban.tt_attack": "Attack Block Message Key",
+  
+  "config.tagban.divider.interact": "§e--- Interaction Settings ---",
+  "config.tagban.interact_b": "Disable Interaction",
+  "config.tagban.interact_w": "Allow Interaction (Whitelist)",
+  "config.tagban.tt_interact": "Interaction Block Message Key",
+  
+  "config.tagban.divider.use": "§b--- Usage Settings ---",
+  "config.tagban.use_b": "Disable Right-Click/Use",
+  "config.tagban.use_w": "Allow Right-Click/Use (Whitelist)",
+  "config.tagban.tt_use": "Usage Block Message Key",
+  
+  "config.tagban.divider.armor": "§9--- Armor Settings ---",
+  "config.tagban.armor_b": "Disable Armor Wearing",
+  "config.tagban.armor_w": "Allow Armor Wearing (Whitelist)",
+  "config.tagban.tt_armor": "Armor Block Message Key",
+  
+  "tooltip.tagban.global": "This item has been globally disabled",
+  "tooltip.tagban.break": "You cannot use this item to mine blocks",
+  "tooltip.tagban.attack": "You cannot use this item to attack",
+  "tooltip.tagban.interact": "You cannot use this item to interact",
+  "tooltip.tagban.use": "You cannot use this item",
+  "tooltip.tagban.armor": "You cannot wear this armor"
 }

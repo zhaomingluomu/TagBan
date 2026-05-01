@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "TagBan-Konfiguration",
+  "category.tagban.general": "Regelverwaltung",
+  "config.tagban.enable_screen": "Konfigurationsbildschirm im Spiel aktivieren",
+  "config.tagban.enable_screen.tooltip": "§cWarnung: Nach dem Deaktivieren können Sie es nur durch Bearbeiten der Konfigurationsdatei wieder aktivieren!",
+  
+  "config.tagban.global_black": "Globale Schwarze Liste (Alles deaktivieren)",
+  "config.tagban.global_white": "Globale Weiße Liste (Alles erlauben)",
+  "config.tagban.tt_global": "Schlüssel für globale Blockierungsnachricht",
+  
+  "config.tagban.divider.break": "§6--- Abbaueinstellungen ---",
+  "config.tagban.break_b": "Abbauen deaktivieren",
+  "config.tagban.break_w": "Abbauen erlauben (Weiße Liste)",
+  "config.tagban.tt_break": "Schlüssel für Abbau-Blockierungsnachricht",
+  
+  "config.tagban.divider.attack": "§c--- Angriffseinstellungen ---",
+  "config.tagban.attack_b": "Angriff deaktivieren",
+  "config.tagban.attack_w": "Angriff erlauben (Weiße Liste)",
+  "config.tagban.tt_attack": "Schlüssel für Angriffs-Blockierungsnachricht",
+  
+  "config.tagban.divider.interact": "§e--- Interaktionseinstellungen ---",
+  "config.tagban.interact_b": "Interaktion deaktivieren",
+  "config.tagban.interact_w": "Interaktion erlauben (Weiße Liste)",
+  "config.tagban.tt_interact": "Schlüssel für Interaktions-Blockierungsnachricht",
+  
+  "config.tagban.divider.use": "§b--- Verwendungseinstellungen ---",
+  "config.tagban.use_b": "Rechtsklick/Verwendung deaktivieren",
+  "config.tagban.use_w": "Rechtsklick/Verwendung erlauben (Weiße Liste)",
+  "config.tagban.tt_use": "Schlüssel für Verwendungs-Blockierungsnachricht",
+  
+  "config.tagban.divider.armor": "§9--- Rüstungseinstellungen ---",
+  "config.tagban.armor_b": "Rüstungstragen deaktivieren",
+  "config.tagban.armor_w": "Rüstungstragen erlauben (Weiße Liste)",
+  "config.tagban.tt_armor": "Schlüssel für Rüstungs-Blockierungsnachricht",
+  
+  "tooltip.tagban.global": "Dieser Gegenstand wurde global deaktiviert",
+  "tooltip.tagban.break": "Sie können diesen Gegenstand nicht zum Abbauen von Blöcken verwenden",
+  "tooltip.tagban.attack": "Sie können diesen Gegenstand nicht zum Angreifen verwenden",
+  "tooltip.tagban.interact": "Sie können diesen Gegenstand nicht zur Interaktion verwenden",
+  "tooltip.tagban.use": "Sie können diesen Gegenstand nicht verwenden",
+  "tooltip.tagban.armor": "Sie können diese Rüstung nicht tragen"
+}

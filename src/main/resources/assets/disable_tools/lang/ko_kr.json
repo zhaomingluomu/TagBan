@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "TagBan 설정",
+  "category.tagban.general": "규칙 관리",
+  "config.tagban.enable_screen": "게임 내 설정 화면 활성화",
+  "config.tagban.enable_screen.tooltip": "§c경고: 비활성화하면 구성 파일을 편집해야만 다시 활성화할 수 있습니다!",
+  
+  "config.tagban.global_black": "전체 블랙리스트 (모두 비활성화)",
+  "config.tagban.global_white": "전체 화이트리스트 (모두 허용)",
+  "config.tagban.tt_global": "전체 차단 메시지 키",
+  
+  "config.tagban.divider.break": "§6--- 채굴 설정 ---",
+  "config.tagban.break_b": "채굴 비활성화",
+  "config.tagban.break_w": "채굴 허용 (화이트리스트)",
+  "config.tagban.tt_break": "채굴 차단 메시지 키",
+  
+  "config.tagban.divider.attack": "§c--- 공격 설정 ---",
+  "config.tagban.attack_b": "공격 비활성화",
+  "config.tagban.attack_w": "공격 허용 (화이트리스트)",
+  "config.tagban.tt_attack": "공격 차단 메시지 키",
+  
+  "config.tagban.divider.interact": "§e--- 상호작용 설정 ---",
+  "config.tagban.interact_b": "상호작용 비활성화",
+  "config.tagban.interact_w": "상호작용 허용 (화이트리스트)",
+  "config.tagban.tt_interact": "상호작용 차단 메시지 키",
+  
+  "config.tagban.divider.use": "§b--- 사용 설정 ---",
+  "config.tagban.use_b": "우클릭/사용 비활성화",
+  "config.tagban.use_w": "우클릭/사용 허용 (화이트리스트)",
+  "config.tagban.tt_use": "사용 차단 메시지 키",
+  
+  "config.tagban.divider.armor": "§9--- 방어구 설정 ---",
+  "config.tagban.armor_b": "방어구 착용 비활성화",
+  "config.tagban.armor_w": "방어구 착용 허용 (화이트리스트)",
+  "config.tagban.tt_armor": "방어구 차단 메시지 키",
+  
+  "tooltip.tagban.global": "이 아이템은 전체적으로 비활성화되었습니다",
+  "tooltip.tagban.break": "이 아이템으로 블록을 채굴할 수 없습니다",
+  "tooltip.tagban.attack": "이 아이템으로 공격할 수 없습니다",
+  "tooltip.tagban.interact": "이 아이템으로 상호작용할 수 없습니다",
+  "tooltip.tagban.use": "이 아이템을 사용할 수 없습니다",
+  "tooltip.tagban.armor": "이 방어구를 착용할 수 없습니다"
+}

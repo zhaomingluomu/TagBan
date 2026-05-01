@@ -1,0 +1,42 @@
+{
+  "title.tagban.config": "TagBan 設定",
+  "category.tagban.general": "ルール管理",
+  "config.tagban.enable_screen": "ゲーム内設定画面を有効化",
+  "config.tagban.enable_screen.tooltip": "§c警告：無効にすると、コンフィグファイルを編集しないと再度有効にできません！",
+  
+  "config.tagban.global_black": "グローバルブラックリスト（すべて無効）",
+  "config.tagban.global_white": "グローバルホワイトリスト（すべて許可）",
+  "config.tagban.tt_global": "グローバルブロックメッセージキー",
+  
+  "config.tagban.divider.break": "§6--- 採掘設定 ---",
+  "config.tagban.break_b": "採掘を無効化",
+  "config.tagban.break_w": "採掘を許可（ホワイトリスト）",
+  "config.tagban.tt_break": "採掘ブロックメッセージキー",
+  
+  "config.tagban.divider.attack": "§c--- 攻撃設定 ---",
+  "config.tagban.attack_b": "攻撃を無効化",
+  "config.tagban.attack_w": "攻撃を許可（ホワイトリスト）",
+  "config.tagban.tt_attack": "攻撃ブロックメッセージキー",
+  
+  "config.tagban.divider.interact": "§e--- 相互作用設定 ---",
+  "config.tagban.interact_b": "相互作用を無効化",
+  "config.tagban.interact_w": "相互作用を許可（ホワイトリスト）",
+  "config.tagban.tt_interact": "相互作用ブロックメッセージキー",
+  
+  "config.tagban.divider.use": "§b--- 使用設定 ---",
+  "config.tagban.use_b": "右クリック/使用を無効化",
+  "config.tagban.use_w": "右クリック/使用を許可（ホワイトリスト）",
+  "config.tagban.tt_use": "使用ブロックメッセージキー",
+  
+  "config.tagban.divider.armor": "§9--- アーマー設定 ---",
+  "config.tagban.armor_b": "アーマー装着を無効化",
+  "config.tagban.armor_w": "アーマー装着を許可（ホワイトリスト）",
+  "config.tagban.tt_armor": "アーマーブロックメッセージキー",
+  
+  "tooltip.tagban.global": "このアイテムはグローバルで無効になっています",
+  "tooltip.tagban.break": "このアイテムでブロックを採掘することはできません",
+  "tooltip.tagban.attack": "このアイテムで攻撃することはできません",
+  "tooltip.tagban.interact": "このアイテムで相互作用することはできません",
+  "tooltip.tagban.use": "このアイテムを使用することはできません",
+  "tooltip.tagban.armor": "このアーマーを着用することはできません"
+}

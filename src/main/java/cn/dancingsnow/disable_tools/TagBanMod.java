@@ -1,237 +1,246 @@
+// TagBanMod.java
 package cn.dancingsnow.disable_tools;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+/**
+ * Main mod class for TagBan.
+ * TagBan 模组的主类。
+ */
 @Mod(TagBanMod.MODID)
 public class TagBanMod {
-    // 模组常量
-    // Mod constants
     public static final String MODID = "tagban";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    // 缓存编译后的正则表达式模式
-    // Cached compiled regex patterns
-    private static volatile List<Pattern> cachedBlacklistPatterns = Collections.emptyList();
-    private static volatile List<Pattern> cachedWhitelistPatterns = Collections.emptyList();
+    /** All action types supported by TagBan */
+    public static final String[] ACTION_TYPES = {"BREAK", "ATTACK", "INTERACT", "USE", "ARMOR"};
 
-    // 物品缓存和配置重载时间跟踪
-    // Item cache and config reload time tracking
-    private static final Map<Item, Boolean> itemCache = new ConcurrentHashMap<>();
-    private static volatile long lastConfigReloadTime = 0;
-    private static final long CACHE_DURATION = 5000;  // 缓存持续时间(毫秒) / Cache duration in milliseconds
+    // Thread-safe maps for patterns and caches
+    // 线程安全的模式和缓存映射
+    private static final Map<String, List<Pattern>> patternsMap = new ConcurrentHashMap<>();
+    private static final Map<String, Map<Item, Boolean>> cachesMap = new ConcurrentHashMap<>();
 
-    // Cloth Config 可用性检查
-    // Cloth Config availability check
+    // Track whether Cloth Config is available at runtime
+    // 追踪 Cloth Config 是否在运行时可用
     private static boolean clothConfigAvailable = false;
-
-    static {
-        // 检查 Cloth Config 是否可用
-        // Check if Cloth Config is available
-        try {
-            Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
-            clothConfigAvailable = true;
-            LOGGER.info("Cloth Config 已检测到，配置界面可用 / Cloth Config detected, config screen available");
-        } catch (ClassNotFoundException e) {
-            clothConfigAvailable = false;
-            LOGGER.info("Cloth Config 未找到，配置界面将不可用 / Cloth Config not found, config screen unavailable");
-        }
-    }
 
     public TagBanMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // 注册配置
-        // Register configuration
+        // Register config file
+        // 注册配置文件
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TagBanConfig.SPEC, "tagban.toml");
-
         modEventBus.addListener(this::onCommonSetup);
 
-        if (clothConfigAvailable) {
+        // Detect Cloth Config availability
+        // 检测 Cloth Config 是否可用
+        clothConfigAvailable = isModLoaded("cloth-config") || isModLoaded("cloth_config");
+        LOGGER.info("[TagBan] Cloth Config detected: {}", clothConfigAvailable);
+
+        // Only register config screen on client side when Cloth Config is present
+        // 仅在客户端且 Cloth Config 存在时注册配置界面
+        if (FMLEnvironment.dist.isClient() && clothConfigAvailable) {
             modEventBus.addListener(this::onClientSetup);
         }
-
-        LOGGER.info("TagBan Mod 已加载 / TagBan Mod loaded");
     }
 
+    /**
+     * Common setup: compiles patterns from config.
+     * 通用初始化：从配置编译正则模式。
+     */
     private void onCommonSetup(final FMLCommonSetupEvent event) {
-        // 通用设置 - 预编译正则表达式
-        // Common setup - precompile regex patterns
         event.enqueueWork(() -> {
             compilePatterns();
-            LOGGER.debug("已预编译 {} 个黑名单模式和 {} 个白名单模式 / Precompiled {} blacklist patterns and {} whitelist patterns",
-                    cachedBlacklistPatterns.size(), cachedWhitelistPatterns.size(),
-                    cachedBlacklistPatterns.size(), cachedWhitelistPatterns.size());
+            LOGGER.info("[TagBan] Patterns compiled successfully. {} global blacklist entries.",
+                    patternsMap.getOrDefault("GLOBAL_BLACK", Collections.emptyList()).size());
         });
     }
 
-    @net.minecraftforge.api.distmarker.OnlyIn(Dist.CLIENT)
+    /**
+     * Client setup: registers the config screen if Cloth Config is available.
+     * 客户端初始化：如果 Cloth Config 可用，注册配置界面。
+     *
+     * This method uses reflection-free approach: the actual Cloth Config imports
+     * are isolated in TagBanConfigScreen class, which is only loaded when this
+     * method is called (and we've already verified Cloth Config is present).
+     *
+     * 此方法使用无反射方式：实际的 Cloth Config 导入隔离在 TagBanConfigScreen 类中，
+     * 该类仅在此方法被调用时加载（我们已经验证 Cloth Config 存在）。
+     */
     private void onClientSetup(final net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event) {
-        // 客户端设置 - 注册配置界面
-        // Client setup - register config screen
-        if (clothConfigAvailable) {
-            event.enqueueWork(() -> {
-                try {
-                    ModLoadingContext.get().registerExtensionPoint(
-                            net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,
-                            () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(
-                                    (client, parent) -> {
-                                        try {
-                                            return (net.minecraft.client.gui.screens.Screen) Class.forName("cn.dancingsnow.disable_tools.TagBanConfigScreen")
-                                                    .getMethod("create", net.minecraft.client.gui.screens.Screen.class)
-                                                    .invoke(null, parent);
-                                        } catch (Exception e) {
-                                            LOGGER.error("无法创建配置界面 / Failed to create config screen", e);
-                                            return parent;
-                                        }
-                                    }
-                            )
-                    );
-                    LOGGER.info("配置界面已注册 / Config screen registered");
-                } catch (Exception e) {
-                    LOGGER.error("注册配置界面时出错 / Error registering config screen", e);
-                }
-            });
-        }
-    }
-
-    private static void compilePatterns() {
-        // 从配置获取列表并编译为正则表达式模式
-        // Get lists from config and compile into regex patterns
-        List<? extends String> blacklist = TagBanConfig.INSTANCE.tools.get();
-        List<? extends String> whitelist = TagBanConfig.INSTANCE.whitelist.get();
-
-        List<Pattern> newBlacklistPatterns = Collections.synchronizedList(new ArrayList<>(blacklist.size()));
-        List<Pattern> newWhitelistPatterns = Collections.synchronizedList(new ArrayList<>(whitelist.size()));
-
-        // 并行编译黑名单正则表达式
-        // Parallel compile blacklist regex patterns
-        blacklist.parallelStream().forEach(regex -> {
+        event.enqueueWork(() -> {
             try {
-                Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-                newBlacklistPatterns.add(pattern);
-            } catch (Exception e) {
-                LOGGER.error("无效的黑名单正则表达式: '{}', 错误: {} / Invalid blacklist regex: '{}', error: {}",
-                        regex, e.getMessage(), regex, e.getMessage());
+                TagBanConfigScreenRegistrar.register();
+                LOGGER.info("[TagBan] Config screen registered successfully.");
+            } catch (Throwable e) {
+                LOGGER.warn("[TagBan] Failed to register config screen: {}", e.getMessage());
+                clothConfigAvailable = false;
             }
         });
+    }
 
-        // 并行编译白名单正则表达式
-        // Parallel compile whitelist regex patterns
-        whitelist.parallelStream().forEach(regex -> {
+    /**
+     * Compiles all pattern lists from config and clears caches.
+     * 从配置编译所有模式列表，并清空缓存。
+     */
+    public static void compilePatterns() {
+        patternsMap.clear();
+        cachesMap.clear();
+
+        patternsMap.put("GLOBAL_WHITE", compileList(TagBanConfig.INSTANCE.globalWhitelist.get()));
+        patternsMap.put("GLOBAL_BLACK", compileList(TagBanConfig.INSTANCE.globalBlacklist.get()));
+
+        for (String t : ACTION_TYPES) {
+            patternsMap.put(t + "_BLACK", compileList(getConfigList(t, false)));
+            patternsMap.put(t + "_WHITE", compileList(getConfigList(t, true)));
+            cachesMap.put(t, new ConcurrentHashMap<>());
+        }
+    }
+
+    /**
+     * Helper to get the raw config list for a given type and whitelist/blacklist.
+     * 辅助方法：获取给定类型和白/黑名单的原始配置列表。
+     */
+    @SuppressWarnings("unchecked")
+    private static List<? extends String> getConfigList(String type, boolean isWhite) {
+        TagBanConfig cfg = TagBanConfig.INSTANCE;
+        if ("BREAK".equals(type)) return isWhite ? cfg.breakWhitelist.get() : cfg.breakBlacklist.get();
+        if ("ATTACK".equals(type)) return isWhite ? cfg.attackWhitelist.get() : cfg.attackBlacklist.get();
+        if ("INTERACT".equals(type)) return isWhite ? cfg.interactWhitelist.get() : cfg.interactBlacklist.get();
+        if ("USE".equals(type)) return isWhite ? cfg.useWhitelist.get() : cfg.useBlacklist.get();
+        if ("ARMOR".equals(type)) return isWhite ? cfg.armorWhitelist.get() : cfg.armorBlacklist.get();
+        return Collections.emptyList();
+    }
+
+    /**
+     * Compiles a list of strings into a list of regex Pattern objects.
+     * Invalid patterns are logged and skipped.
+     * 将字符串列表编译为正则表达式 Pattern 对象列表。
+     * 无效模式会被记录日志并跳过。
+     */
+    private static List<Pattern> compileList(List<? extends String> list) {
+        if (list == null || list.isEmpty()) return Collections.emptyList();
+
+        List<Pattern> ps = new ArrayList<>(list.size());
+        for (String s : list) {
+            if (s == null || s.trim().isEmpty()) continue;
             try {
-                Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-                newWhitelistPatterns.add(pattern);
-            } catch (Exception e) {
-                LOGGER.error("无效的白名单正则表达式: '{}', 错误: {} / Invalid whitelist regex: '{}', error: {}",
-                        regex, e.getMessage(), regex, e.getMessage());
+                ps.add(Pattern.compile(s.trim(), Pattern.CASE_INSENSITIVE));
+            } catch (PatternSyntaxException e) {
+                LOGGER.warn("[TagBan] Invalid regex pattern '{}': {}", s, e.getMessage());
             }
+        }
+        return Collections.unmodifiableList(ps);
+    }
+
+    /**
+     * Checks if an item is banned for a given action type.
+     * Uses caching for performance.
+     * 检查物品是否被禁止用于给定的动作类型。使用缓存提升性能。
+     *
+     * Priority: type whitelist > global whitelist > global blacklist > type blacklist
+     * 优先级：类型白名单 > 全局白名单 > 全局黑名单 > 类型黑名单
+     *
+     * @param item The item to check
+     * @param type The action type (BREAK, ATTACK, INTERACT, USE, ARMOR)
+     * @return true if banned, false otherwise
+     */
+    public static boolean check(Item item, String type) {
+        if (item == null || type == null) return false;
+
+        Map<Item, Boolean> cache = cachesMap.get(type);
+        if (cache == null) return false;
+
+        return cache.computeIfAbsent(item, i -> {
+            ResourceLocation key = ForgeRegistries.ITEMS.getKey(i);
+            if (key == null) return false;
+            String id = key.toString();
+
+            // Type-specific whitelist has highest priority
+            // 类型特定白名单优先级最高
+            if (matchAny(id, type + "_WHITE")) return false;
+            // Global whitelist next
+            // 然后是全局白名单
+            if (matchAny(id, "GLOBAL_WHITE")) return false;
+            // Global blacklist
+            // 全局黑名单
+            if (matchAny(id, "GLOBAL_BLACK")) return true;
+            // Type-specific blacklist
+            // 类型特定黑名单
+            return matchAny(id, type + "_BLACK");
         });
-
-        // 更新缓存模式列表
-        // Update cached pattern lists
-        cachedBlacklistPatterns = new ArrayList<>(newBlacklistPatterns);
-        cachedWhitelistPatterns = new ArrayList<>(newWhitelistPatterns);
-
-        // 清空物品缓存并更新重载时间
-        // Clear item cache and update reload time
-        itemCache.clear();
-        lastConfigReloadTime = System.currentTimeMillis();
-
-        LOGGER.debug("正则表达式编译完成 - 黑名单: {} 条, 白名单: {} 条 / Regex compilation completed - blacklist: {}, whitelist: {}",
-                cachedBlacklistPatterns.size(), cachedWhitelistPatterns.size(),
-                cachedBlacklistPatterns.size(), cachedWhitelistPatterns.size());
     }
 
-    private static void checkAndRecompilePatterns() {
-        // 检查是否需要重新编译模式（缓存为空或超时）
-        // Check if patterns need recompilation (cache empty or timeout)
-        if ((cachedBlacklistPatterns.isEmpty() && cachedWhitelistPatterns.isEmpty()) ||
-                System.currentTimeMillis() - lastConfigReloadTime > CACHE_DURATION) {
-            compilePatterns();
+    /**
+     * Checks if an item ID matches any pattern in the given list.
+     * 检查物品 ID 是否匹配给定列表中的任一模式。
+     */
+    private static boolean matchAny(String id, String listKey) {
+        List<Pattern> ps = patternsMap.get(listKey);
+        if (ps == null || ps.isEmpty()) return false;
+        for (Pattern p : ps) {
+            if (p.matcher(id).matches()) return true;
         }
-    }
-
-    public static boolean isItemDisabled(Item item) {
-        // 检查物品是否被禁用
-        // Check if item is disabled
-        if (item == null) return false;
-
-        // 使用缓存避免重复计算
-        // Use cache to avoid repeated calculations
-        Boolean cached = itemCache.get(item);
-        if (cached != null) {
-            return cached;
-        }
-
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(item);
-        if (key == null) {
-            itemCache.put(item, false);
-            return false;
-        }
-
-        String itemId = key.toString();
-
-        // 确保模式已编译
-        // Ensure patterns are compiled
-        checkAndRecompilePatterns();
-
-        // 首先检查白名单（优先级更高）
-        // Check whitelist first (higher priority)
-        for (Pattern pattern : cachedWhitelistPatterns) {
-            if (pattern.matcher(itemId).matches()) {
-                itemCache.put(item, false);
-                return false;
-            }
-        }
-
-        // 然后检查黑名单
-        // Then check blacklist
-        for (Pattern pattern : cachedBlacklistPatterns) {
-            if (pattern.matcher(itemId).matches()) {
-                itemCache.put(item, true);
-                return true;
-            }
-        }
-
-        itemCache.put(item, false);
         return false;
     }
 
-    public static String getTooltipText() {
-        // 获取提示文本
-        // Get tooltip text
-        return TagBanConfig.INSTANCE.tooltip.get();
+    /**
+     * Gets the tooltip translation key for a given action type.
+     * 获取给定动作类型的提示文本本地化键。
+     */
+    public static String getTooltipText(String type) {
+        TagBanConfig cfg = TagBanConfig.INSTANCE;
+        if ("BREAK".equals(type)) return cfg.breakTooltip.get();
+        if ("ATTACK".equals(type)) return cfg.attackTooltip.get();
+        if ("INTERACT".equals(type)) return cfg.interactTooltip.get();
+        if ("USE".equals(type)) return cfg.useTooltip.get();
+        if ("ARMOR".equals(type)) return cfg.armorTooltip.get();
+        return cfg.globalTooltip.get();
     }
 
+    /**
+     * Safely checks if a mod is loaded.
+     * 安全地检查模组是否已加载。
+     */
+    public static boolean isModLoaded(String modId) {
+        try {
+            return ModList.get() != null && ModList.get().isLoaded(modId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns whether Cloth Config is available at runtime.
+     * 返回 Cloth Config 是否在运行时可用。
+     */
+    public static boolean isClothConfigAvailable() {
+        return clothConfigAvailable;
+    }
+
+    /**
+     * Reloads the configuration (recompiles patterns and clears caches).
+     * 重新加载配置（重新编译模式并清空缓存）。
+     */
     public static void reloadConfig() {
-        // 在单独线程中重新加载配置
-        // Reload configuration in separate thread
-        new Thread(() -> {
-            compilePatterns();
-            LOGGER.info("配置已重新加载 / Configuration reloaded");
-        }, "TagBan-Config-Reload").start();
-    }
-
-    public static void clearCache() {
-        // 清空物品缓存
-        // Clear item cache
-        itemCache.clear();
+        compilePatterns();
+        LOGGER.info("[TagBan] Configuration reloaded.");
     }
 }
